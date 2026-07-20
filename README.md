@@ -1,12 +1,13 @@
+<!-- markdownlint-disable MD013 -->
 # java-fwf
 
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Java](https://img.shields.io/badge/Java-17%2B%20%2F%2025-orange)](https://jdk.java.net/)
 [![FWF Compliance](https://img.shields.io/badge/FWF_Compliance-5%2F5_cases_passed-brightgreen?logo=github)](https://github.com/fixed-width-file/fwf-compliance-tests)
-[![Build & Test](https://github.com/fixed-width-file/java-fwf/actions/workflows/ci.yml/badge.svg)](https://github.com/fixed-width-file/java-fwf/actions)
+[![QA](https://github.com/fixed-width-file/java-fwf/actions/workflows/qa.yml/badge.svg)](https://github.com/fixed-width-file/java-fwf/actions/workflows/qa.yml)
 [![Coverage](https://codecov.io/gh/fixed-width-file/java-fwf/branch/main/graph/badge.svg)](https://codecov.io/gh/fixed-width-file/java-fwf)
-[![Docs](https://github.com/fixed-width-file/python-pyfwf/actions/workflows/docs.yml/badge.svg)](https://fixed-width-file.github.io/java-fwf/)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+
 **java-fwf** is a high-performance, type-safe Java library for parsing, validating, hydrating, and exporting **Fixed Width Files (FWF)**.
 
 It is part of the [Fixed Width File Ecosystem](https://fixed-width-file.github.io/) and fully implements the **[fwf-compliance-tests v1.0.0](https://github.com/fixed-width-file/fwf-compliance-tests)** language-agnostic specification.
