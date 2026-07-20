@@ -1,0 +1,17 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+
+  - repo: local
+    hooks:
+      - id: maven-test-pre-push
+        name: Maven Test Pre-Push
+        entry: powershell -Command "$env:JAVA_HOME='C:\\Program Files\\JetBrains\\PhpStorm 2026.1.2\\jbr'; & 'C:\\Users\\2080882\\maven\\apache-maven-3.9.9\\bin\\mvn.cmd' test"
+        language: system
+        stages: [pre-push]
+        pass_filenames: false
