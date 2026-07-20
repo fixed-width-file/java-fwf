@@ -4,7 +4,7 @@
 [![Java](https://img.shields.io/badge/Java-17%2B%20%2F%2025-orange)](https://jdk.java.net/)
 [![FWF Compliance](https://img.shields.io/badge/FWF_Compliance-5%2F5_cases_passed-brightgreen?logo=github)](https://github.com/fixed-width-file/fwf-compliance-tests)
 [![Build & Test](https://github.com/fixed-width-file/java-fwf/actions/workflows/ci.yml/badge.svg)](https://github.com/fixed-width-file/java-fwf/actions)
-[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/fixed-width-file/java-fwf)
+[![Coverage](https://codecov.io/gh/fixed-width-file/java-fwf/branch/main/graph/badge.svg)](https://codecov.io/gh/fixed-width-file/java-fwf)
 
 **java-fwf** is a high-performance, type-safe Java library for parsing, validating, hydrating, and exporting **Fixed Width Files (FWF)**.
 
