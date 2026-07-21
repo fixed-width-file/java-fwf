@@ -1,5 +1,5 @@
-com.kelsoncm.fwf.columns
-com.kelsoncm.fwf.descriptors
-com.kelsoncm.fwf.hydrating
-com.kelsoncm.fwf.readers
-com.kelsoncm.fwf.renders
+io.github.kelsoncm.fwf.columns
+io.github.kelsoncm.fwf.descriptors
+io.github.kelsoncm.fwf.hydrating
+io.github.kelsoncm.fwf.readers
+io.github.kelsoncm.fwf.renders
