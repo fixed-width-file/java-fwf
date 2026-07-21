@@ -35,7 +35,7 @@ Add the dependency to your `pom.xml`:
 ```xml
 <dependency>
     <groupId>io.github.kelsoncm</groupId>
-    <artifactId>java-fwf</artifactId>
+    <artifactId>fwf</artifactId>
     <version>1.0.0</version>
 </dependency>
 ```
@@ -43,7 +43,7 @@ Add the dependency to your `pom.xml`:
 ### Gradle
 
 ```groovy
-implementation 'io.github.kelsoncm:java-fwf:1.0.0'
+implementation 'io.github.kelsoncm:fwf:1.0.0'
 ```
 
 ---

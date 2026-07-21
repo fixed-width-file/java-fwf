@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.kelsoncm</groupId>
-    <artifactId>java-fwf</artifactId>
+    <artifactId>fwf</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>java-fwf</name>
+    <name>fwf</name>
     <description>Java implementation of the Fixed Width File (FWF) specification.</description>
     <url>https://github.com/fixed-width-file/java-fwf</url>
 
