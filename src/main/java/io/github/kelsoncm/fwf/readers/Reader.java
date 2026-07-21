@@ -7,7 +7,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
- * Reader for fixed-width file content into structured maps.
+ * Sequential reader for Fixed Width Files.
+ *
+ * <p>Implements {@link Iterable} and {@link Iterator} to stream fixed-width records line by line as structured maps.
+ * Validates line size and line break delimiters during initialization.</p>
  */
 public class Reader implements Iterable<Map<String, Object>>, Iterator<Map<String, Object>> {
 
@@ -17,6 +20,14 @@ public class Reader implements Iterable<Map<String, Object>>, Iterator<Map<Strin
     private final int totalLinesCount;
     private int currentLineNum = 0;
 
+    /**
+     * Constructs a new {@code Reader} with a content source, file descriptor, and newline delimiter.
+     *
+     * @param iterable       source object (String, List of Strings, InputStream, or java.io.Reader)
+     * @param fileDescriptor non-null {@link FileDescriptor}
+     * @param newline        newline delimiter string ({@code "\n"}, {@code "\r"}, or {@code "\n\r"})
+     * @throws IllegalArgumentException if any argument is invalid or line sizes do not match
+     */
     public Reader(Object iterable, FileDescriptor fileDescriptor, String newline) {
         if (iterable == null) {
             throw new IllegalArgumentException("O argumento _iterable tem que ser um Iterator");
@@ -48,6 +59,12 @@ public class Reader implements Iterable<Map<String, Object>>, Iterator<Map<Strin
         this.totalLinesCount = lines.size();
     }
 
+    /**
+     * Constructs a new {@code Reader} defaulting to newline delimiter {@code "\n\r"}.
+     *
+     * @param iterable       source object
+     * @param fileDescriptor non-null {@link FileDescriptor}
+     */
     public Reader(Object iterable, FileDescriptor fileDescriptor) {
         this(iterable, fileDescriptor, "\n\r");
     }
@@ -102,24 +119,50 @@ public class Reader implements Iterable<Map<String, Object>>, Iterator<Map<Strin
         return result;
     }
 
+    /**
+     * Gets the total number of lines in the file.
+     *
+     * @return line count
+     */
     public int getLinesCount() {
         return totalLinesCount;
     }
 
+    /**
+     * Gets the 1-based index of the line currently being processed.
+     *
+     * @return current 1-based line number
+     */
     public int getLineNum() {
         return currentLineNum;
     }
 
+    /**
+     * Returns an iterator over the parsed row maps.
+     *
+     * @return iterator
+     */
     @Override
     public Iterator<Map<String, Object>> iterator() {
         return this;
     }
 
+    /**
+     * Checks if more lines remain to be read.
+     *
+     * @return true if lines remain, false otherwise
+     */
     @Override
     public boolean hasNext() {
         return currentLineNum < totalLinesCount;
     }
 
+    /**
+     * Reads and parses the next line into a map of column names to parsed values.
+     *
+     * @return parsed row map
+     * @throws NoSuchElementException if no more lines remain
+     */
     @Override
     public Map<String, Object> next() {
         if (!hasNext()) {

@@ -10,13 +10,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Render utility to export file descriptors into Markdown, ReStructuredText (RST), and HTML format.
+ * Utility class to export layout specifications of a {@link FileDescriptor} into Markdown, ReStructuredText (RST), and HTML tables.
  */
 public final class RenderUtils {
 
     private RenderUtils() {
     }
 
+    /**
+     * Renders the layout specification of a {@link FileDescriptor} as Markdown tables into a {@link Writer}.
+     *
+     * @param fileDescriptor the layout descriptor to render
+     * @param out            destination writer
+     * @throws IOException if an I/O error occurs
+     */
     public static void renderAsMarkdown(FileDescriptor fileDescriptor, Writer out) throws IOException {
         out.write("# Description\n\n");
 
@@ -63,6 +70,13 @@ public final class RenderUtils {
         }
     }
 
+    /**
+     * Renders the layout specification of a {@link FileDescriptor} as ReStructuredText (RST) tables into a {@link Writer}.
+     *
+     * @param fileDescriptor the layout descriptor to render
+     * @param out            destination writer
+     * @throws IOException if an I/O error occurs
+     */
     public static void renderAsRst(FileDescriptor fileDescriptor, Writer out) throws IOException {
         out.write("File Description\n===============\n\n");
 
@@ -140,6 +154,13 @@ public final class RenderUtils {
         }
     }
 
+    /**
+     * Renders the layout specification of a {@link FileDescriptor} as HTML tables into a {@link Writer}.
+     *
+     * @param fileDescriptor the layout descriptor to render
+     * @param out            destination writer
+     * @throws IOException if an I/O error occurs
+     */
     public static void renderAsHtml(FileDescriptor fileDescriptor, Writer out) throws IOException {
         out.write("<h1>Description</h1>\n");
 

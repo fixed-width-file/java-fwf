@@ -8,11 +8,23 @@ import java.util.Map;
 
 /**
  * Descriptor for a row consisting of multiple ordered columns.
+ *
+ * <p>Automatically computes 1-based start/end positions for every column in order and validates
+ * that column boundaries are contiguous without overlaps or gaps.</p>
  */
 public class RowDescriptor {
 
+    /**
+     * Ordered list of column definitions for this row.
+     */
     protected final List<AbstractColumn> columns;
 
+    /**
+     * Constructs a new {@code RowDescriptor} with a list of column definitions.
+     *
+     * @param columns non-null, non-empty list of {@link AbstractColumn} instances
+     * @throws IllegalArgumentException if {@code columns} is null or empty
+     */
     public RowDescriptor(List<AbstractColumn> columns) {
         if (columns == null) {
             throw new IllegalArgumentException("columns deve ser uma List");
@@ -30,14 +42,29 @@ public class RowDescriptor {
         validatePositions();
     }
 
+    /**
+     * Gets the list of column definitions.
+     *
+     * @return unmodifiable/ordered list of columns
+     */
     public List<AbstractColumn> getColumns() {
         return columns;
     }
 
+    /**
+     * Gets the total line size (in characters) required by this row.
+     *
+     * @return total line size in characters
+     */
     public int getLineSize() {
         return columns.get(columns.size() - 1).getEnd();
     }
 
+    /**
+     * Validates that column positions start at 1 and are strictly contiguous.
+     *
+     * @throws IllegalArgumentException if column positions are invalid or contain gaps/overlaps
+     */
     public void validatePositions() {
         AbstractColumn prev = null;
         for (AbstractColumn col : columns) {
@@ -57,6 +84,12 @@ public class RowDescriptor {
         }
     }
 
+    /**
+     * Parses a raw line string into a map of column names to parsed values.
+     *
+     * @param rowLine raw fixed-width row line
+     * @return map of column names to parsed values
+     */
     public Map<String, Object> getValues(String rowLine) {
         Map<String, Object> result = new LinkedHashMap<>();
         for (AbstractColumn col : columns) {

@@ -1,12 +1,24 @@
 package io.github.kelsoncm.fwf.columns;
 
 /**
- * Positive decimal column with fixed decimal places and leading zeros.
+ * Positive decimal column with a fixed number of decimal places, formatted with leading zeros.
  */
 public class PositiveDecimalColumn extends PositiveIntegerColumn {
 
+    /**
+     * Number of implicit decimal places.
+     */
     protected final int decimals;
 
+    /**
+     * Constructs a new {@code PositiveDecimalColumn} with a name, size, decimals, and description.
+     *
+     * @param name        the column name
+     * @param size        the total column size in characters
+     * @param decimals    number of implicit decimal places, must be &gt; 0 and &lt; size
+     * @param description human-readable description
+     * @throws IllegalArgumentException if {@code decimals} &lt;= 0 or {@code size} &lt;= {@code decimals}
+     */
     public PositiveDecimalColumn(String name, int size, int decimals, String description) {
         super(name, size, description);
         if (decimals <= 0) {
@@ -18,18 +30,43 @@ public class PositiveDecimalColumn extends PositiveIntegerColumn {
         this.decimals = decimals;
     }
 
+    /**
+     * Constructs a new {@code PositiveDecimalColumn} with a name, size, and decimals.
+     *
+     * @param name     the column name
+     * @param size     the total column size in characters
+     * @param decimals number of implicit decimal places
+     */
     public PositiveDecimalColumn(String name, int size, int decimals) {
         this(name, size, decimals, null);
     }
 
+    /**
+     * Constructs a new {@code PositiveDecimalColumn} with a name and size, defaulting to 2 decimals.
+     *
+     * @param name the column name
+     * @param size the total column size in characters
+     */
     public PositiveDecimalColumn(String name, int size) {
         this(name, size, 2, null);
     }
 
+    /**
+     * Gets the number of implicit decimal places.
+     *
+     * @return number of decimal places
+     */
     public int getDecimals() {
         return decimals;
     }
 
+    /**
+     * Converts a raw fixed-width zero-padded integer slice into a Double value with decimal precision.
+     *
+     * @param slice raw fixed-width substring
+     * @return parsed Double value
+     * @throws IllegalArgumentException if {@code slice} is not a valid positive decimal string
+     */
     @Override
     public Object toValue(String slice) {
         try {
@@ -42,6 +79,13 @@ public class PositiveDecimalColumn extends PositiveIntegerColumn {
         }
     }
 
+    /**
+     * Formats a non-negative Double/Float or null into a zero-padded string of exact column size.
+     *
+     * @param value Double, Float or null to format
+     * @return zero-padded decimal string of size {@link #getSize()}
+     * @throws IllegalArgumentException if {@code value} is negative or not a Double/Float
+     */
     @Override
     public String toStr(Object value) {
         if (value == null) {

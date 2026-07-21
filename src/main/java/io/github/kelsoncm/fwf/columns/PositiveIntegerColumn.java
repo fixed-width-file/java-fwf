@@ -1,18 +1,38 @@
 package io.github.kelsoncm.fwf.columns;
 
 /**
- * Positive integer column with leading zeros.
+ * Positive integer column represented as a zero-padded string of digits.
  */
 public class PositiveIntegerColumn extends AbstractColumn {
 
+    /**
+     * Constructs a new {@code PositiveIntegerColumn} with a name, size, and description.
+     *
+     * @param name        the column name
+     * @param size        the column size in characters
+     * @param description human-readable description
+     */
     public PositiveIntegerColumn(String name, int size, String description) {
         super(name, size, description);
     }
 
+    /**
+     * Constructs a new {@code PositiveIntegerColumn} with a name and size.
+     *
+     * @param name the column name
+     * @param size the column size in characters
+     */
     public PositiveIntegerColumn(String name, int size) {
         super(name, size);
     }
 
+    /**
+     * Converts a raw fixed-width zero-padded integer slice into an Integer value.
+     *
+     * @param slice raw fixed-width substring
+     * @return parsed integer value
+     * @throws IllegalArgumentException if {@code slice} is not a valid non-negative integer
+     */
     @Override
     public Object toValue(String slice) {
         super.toValue(slice);
@@ -31,6 +51,13 @@ public class PositiveIntegerColumn extends AbstractColumn {
         }
     }
 
+    /**
+     * Formats a non-negative Number or null into a zero-padded string of exact column size.
+     *
+     * @param value Number or null to format
+     * @return zero-padded string of size {@link #getSize()}
+     * @throws IllegalArgumentException if {@code value} is negative or not a valid number
+     */
     @Override
     public String toStr(Object value) {
         if (value == null) {
