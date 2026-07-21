@@ -1,46 +1,59 @@
 package io.github.kelsoncm.fwf.descriptors;
 
-import io.github.kelsoncm.fwf.hydrating.Hydrator;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * File descriptor composing header, details, and footer descriptors.
+ * Descriptor representing the layout structure of a Fixed Width File.
  */
-public class FileDescriptor extends Hydrator {
+public class FileDescriptor {
 
-    @SuppressWarnings("unused")
-    public static final String[] HYDRATING_ARGS = {"details", "header", "footer"};
-
+    private final List<DetailRowDescriptor> details;
     private final HeaderRowDescriptor header;
     private final FooterRowDescriptor footer;
-    private final List<DetailRowDescriptor> details;
-    private final int lineSize;
 
     public FileDescriptor(List<DetailRowDescriptor> details, HeaderRowDescriptor header, FooterRowDescriptor footer) {
-        if (details == null) {
-            throw new IllegalArgumentException("details deve ser uma List");
+        if (details == null || details.isEmpty()) {
+            throw new IllegalArgumentException("FileDescriptor must contain at least one DetailRowDescriptor.");
         }
-        if (details.isEmpty()) {
-            throw new IllegalArgumentException("details deve ser uma List com ao menos 1 DetailRowDescriptor");
-        }
-        for (Object detail : details) {
-            if (!(detail instanceof DetailRowDescriptor)) {
-                throw new IllegalArgumentException("details deve ser uma List de DetailRowDescriptor");
-            }
-        }
-
-        this.details = details;
+        this.details = Collections.unmodifiableList(new ArrayList<>(details));
         this.header = header;
         this.footer = footer;
 
-        validateSizes();
-        this.lineSize = details.get(0).getLineSize();
+        validateLineSizes();
+    }
+
+    public FileDescriptor(List<DetailRowDescriptor> details, HeaderRowDescriptor header) {
+        this(details, header, null);
     }
 
     public FileDescriptor(List<DetailRowDescriptor> details) {
         this(details, null, null);
+    }
+
+    private void validateLineSizes() {
+        int expectedSize = details.get(0).getLineSize();
+
+        for (DetailRowDescriptor detail : details) {
+            if (detail.getLineSize() != expectedSize) {
+                throw new IllegalArgumentException("All DetailRowDescriptors must have the same line size.");
+            }
+        }
+
+        if (header != null && header.getLineSize() != expectedSize) {
+            throw new IllegalArgumentException("HeaderRowDescriptor line size (" + header.getLineSize() +
+                    ") does not match detail line size (" + expectedSize + ").");
+        }
+
+        if (footer != null && footer.getLineSize() != expectedSize) {
+            throw new IllegalArgumentException("FooterRowDescriptor line size (" + footer.getLineSize() +
+                    ") does not match detail line size (" + expectedSize + ").");
+        }
+    }
+
+    public List<DetailRowDescriptor> getDetails() {
+        return details;
     }
 
     public HeaderRowDescriptor getHeader() {
@@ -51,36 +64,7 @@ public class FileDescriptor extends Hydrator {
         return footer;
     }
 
-    public List<DetailRowDescriptor> getDetails() {
-        return details;
-    }
-
     public int getLineSize() {
-        return lineSize;
-    }
-
-    public void validateSizes() {
-        int h = (header != null) ? header.getLineSize() : 0;
-        int f = (footer != null) ? footer.getLineSize() : 0;
-        int d = details.get(0).getLineSize();
-
-        List<Integer> detailSizes = new ArrayList<>();
-        boolean allDetailsEqual = true;
-        for (DetailRowDescriptor detail : details) {
-            int size = detail.getLineSize();
-            detailSizes.add(size);
-            if (size != d) {
-                allDetailsEqual = false;
-            }
-        }
-
-        boolean headerMatch = (h == 0 || h == d);
-        boolean footerMatch = (f == 0 || f == d);
-
-        if (!allDetailsEqual || !headerMatch || !footerMatch) {
-            throw new IllegalArgumentException(
-                    String.format("O tamanho das linhas header (%d), footer (%d) e das details (%s) devem ser iguais", h, f, detailSizes)
-            );
-        }
+        return details.get(0).getLineSize();
     }
 }

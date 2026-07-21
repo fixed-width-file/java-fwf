@@ -5,9 +5,6 @@ package io.github.kelsoncm.fwf.columns;
  */
 public class CharColumn extends AbstractColumn {
 
-    @SuppressWarnings("unused")
-    public static final String[] HYDRATING_ARGS = {"name", "size", "description"};
-
     public CharColumn(String name, int size, String description) {
         super(name, size, description);
     }

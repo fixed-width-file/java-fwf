@@ -11,9 +11,6 @@ import java.util.regex.Pattern;
  */
 public class DateTimeColumn extends AbstractColumn {
 
-    @SuppressWarnings("unused")
-    public static final String[] HYDRATING_ARGS = {"name", "format", "description"};
-
     protected final String format;
     protected final String javaPattern;
     protected final DateTimeFormatter formatter;

@@ -5,9 +5,6 @@ package io.github.kelsoncm.fwf.columns;
  */
 public class PositiveIntegerColumn extends AbstractColumn {
 
-    @SuppressWarnings("unused")
-    public static final String[] HYDRATING_ARGS = {"name", "size", "description"};
-
     public PositiveIntegerColumn(String name, int size, String description) {
         super(name, size, description);
     }

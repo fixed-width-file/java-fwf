@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html","k":"18"},{"l":"io.github.kelsoncm.fwf.columns"},{"l":"io.github.kelsoncm.fwf.descriptors"},{"l":"io.github.kelsoncm.fwf.hydrating"},{"l":"io.github.kelsoncm.fwf.readers"},{"l":"io.github.kelsoncm.fwf.renders"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html","k":"18"},{"l":"io.github.kelsoncm.fwf.columns"},{"l":"io.github.kelsoncm.fwf.descriptors"},{"l":"io.github.kelsoncm.fwf.readers"},{"l":"io.github.kelsoncm.fwf.renders"}];updateSearchResults();

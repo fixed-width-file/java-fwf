@@ -5,9 +5,6 @@ package io.github.kelsoncm.fwf.columns;
  */
 public class PositiveDecimalColumn extends PositiveIntegerColumn {
 
-    @SuppressWarnings("unused")
-    public static final String[] HYDRATING_ARGS = {"name", "size", "decimals", "description"};
-
     protected final int decimals;
 
     public PositiveDecimalColumn(String name, int size, int decimals, String description) {

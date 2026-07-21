@@ -1,7 +1,6 @@
 package io.github.kelsoncm.fwf.descriptors;
 
 import io.github.kelsoncm.fwf.columns.AbstractColumn;
-import io.github.kelsoncm.fwf.hydrating.Hydrator;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -10,10 +9,7 @@ import java.util.Map;
 /**
  * Descriptor for a row consisting of multiple ordered columns.
  */
-public class RowDescriptor extends Hydrator {
-
-    @SuppressWarnings("unused")
-    public static final String[] HYDRATING_ARGS = {"columns"};
+public class RowDescriptor {
 
     protected final List<AbstractColumn> columns;
 

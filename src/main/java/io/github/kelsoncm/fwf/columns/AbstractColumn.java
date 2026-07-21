@@ -1,11 +1,9 @@
 package io.github.kelsoncm.fwf.columns;
 
-import io.github.kelsoncm.fwf.hydrating.Hydrator;
-
 /**
  * Base abstract class for fixed-width file columns.
  */
-public abstract class AbstractColumn extends Hydrator {
+public abstract class AbstractColumn {
 
     protected final String name;
     protected final int size;
