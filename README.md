@@ -51,9 +51,9 @@ implementation 'io.github.kelsoncm:java-fwf:1.0.0'
 ## 💡 Quickstart
 
 ```java
-import com.kelsoncm.fwf.columns.*;
-import com.kelsoncm.fwf.descriptors.*;
-import com.kelsoncm.fwf.readers.Reader;
+import io.github.kelsoncm.fwf.columns.*;
+import io.github.kelsoncm.fwf.descriptors.*;
+import io.github.kelsoncm.fwf.readers.Reader;
 
 import java.util.List;
 import java.util.Map;

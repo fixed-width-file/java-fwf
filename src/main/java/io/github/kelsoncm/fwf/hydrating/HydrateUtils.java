@@ -13,7 +13,7 @@ public final class HydrateUtils {
     }
 
     /**
-     * Map legacy or cross-language class names to Java class names for compatibility.
+     * Map cross-language class names to Java class names.
      */
     private static final Map<String, String> CLASS_NAME_MAPPING = Map.ofEntries(
             Map.entry("pyfwf.columns.CharColumn", "io.github.kelsoncm.fwf.columns.CharColumn"),
@@ -26,20 +26,7 @@ public final class HydrateUtils {
             Map.entry("pyfwf.descriptors.HeaderRowDescriptor", "io.github.kelsoncm.fwf.descriptors.HeaderRowDescriptor"),
             Map.entry("pyfwf.descriptors.DetailRowDescriptor", "io.github.kelsoncm.fwf.descriptors.DetailRowDescriptor"),
             Map.entry("pyfwf.descriptors.FooterRowDescriptor", "io.github.kelsoncm.fwf.descriptors.FooterRowDescriptor"),
-            Map.entry("pyfwf.descriptors.FileDescriptor", "io.github.kelsoncm.fwf.descriptors.FileDescriptor"),
-
-            // Legacy com.kelsoncm.fwf mapping
-            Map.entry("com.kelsoncm.fwf.columns.CharColumn", "io.github.kelsoncm.fwf.columns.CharColumn"),
-            Map.entry("com.kelsoncm.fwf.columns.RightCharColumn", "io.github.kelsoncm.fwf.columns.RightCharColumn"),
-            Map.entry("com.kelsoncm.fwf.columns.PositiveIntegerColumn", "io.github.kelsoncm.fwf.columns.PositiveIntegerColumn"),
-            Map.entry("com.kelsoncm.fwf.columns.PositiveDecimalColumn", "io.github.kelsoncm.fwf.columns.PositiveDecimalColumn"),
-            Map.entry("com.kelsoncm.fwf.columns.DateTimeColumn", "io.github.kelsoncm.fwf.columns.DateTimeColumn"),
-            Map.entry("com.kelsoncm.fwf.columns.DateColumn", "io.github.kelsoncm.fwf.columns.DateColumn"),
-            Map.entry("com.kelsoncm.fwf.columns.TimeColumn", "io.github.kelsoncm.fwf.columns.TimeColumn"),
-            Map.entry("com.kelsoncm.fwf.descriptors.HeaderRowDescriptor", "io.github.kelsoncm.fwf.descriptors.HeaderRowDescriptor"),
-            Map.entry("com.kelsoncm.fwf.descriptors.DetailRowDescriptor", "io.github.kelsoncm.fwf.descriptors.DetailRowDescriptor"),
-            Map.entry("com.kelsoncm.fwf.descriptors.FooterRowDescriptor", "io.github.kelsoncm.fwf.descriptors.FooterRowDescriptor"),
-            Map.entry("com.kelsoncm.fwf.descriptors.FileDescriptor", "io.github.kelsoncm.fwf.descriptors.FileDescriptor")
+            Map.entry("pyfwf.descriptors.FileDescriptor", "io.github.kelsoncm.fwf.descriptors.FileDescriptor")
     );
 
     @SuppressWarnings("unchecked")
