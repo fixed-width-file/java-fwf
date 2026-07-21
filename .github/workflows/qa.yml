@@ -31,7 +31,7 @@ jobs:
           cache: 'maven'
 
       - name: Lint Markdown
-        uses: DavidAnson/markdownlint-cli2-action@v19
+        uses: DavidAnson/markdownlint-cli2-action@v24
 
       - name: Run Semgrep SAST
         if: github.event_name == 'pull_request' || github.event_name == 'schedule'
