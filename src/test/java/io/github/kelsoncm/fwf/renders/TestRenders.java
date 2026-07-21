@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestRenders {
@@ -34,6 +35,13 @@ public class TestRenders {
         return new FileDescriptor(List.of(detail), header, footer);
     }
 
+    private FileDescriptor createDetailOnlyFileDescriptor() {
+        CharColumn c1 = new CharColumn("name", 10, "Name of user");
+        PositiveIntegerColumn c2 = new PositiveIntegerColumn("age", 3, "Age in years");
+        DetailRowDescriptor detail = new DetailRowDescriptor(List.of(c1, c2));
+        return new FileDescriptor(List.of(detail));
+    }
+
     @Test
     void testRenderAsMarkdown() throws IOException {
         FileDescriptor fd = createSampleFileDescriptor();
@@ -48,6 +56,14 @@ public class TestRenders {
         assertTrue(result.contains("## FOOTER"));
         assertTrue(result.contains("CharColumn"));
         assertTrue(result.contains("PositiveIntegerColumn"));
+
+        FileDescriptor detailOnly = createDetailOnlyFileDescriptor();
+        StringWriter sw2 = new StringWriter();
+        RenderUtils.renderAsMarkdown(detailOnly, sw2);
+        String res2 = sw2.toString();
+        assertFalse(res2.contains("## HEADER"));
+        assertFalse(res2.contains("## FOOTER"));
+        assertTrue(res2.contains("## DETAILS 1"));
     }
 
     @Test
@@ -62,6 +78,14 @@ public class TestRenders {
         assertTrue(result.contains("HEADER"));
         assertTrue(result.contains("DETAILS 1"));
         assertTrue(result.contains("FOOTER"));
+
+        FileDescriptor detailOnly = createDetailOnlyFileDescriptor();
+        StringWriter sw2 = new StringWriter();
+        RenderUtils.renderAsRst(detailOnly, sw2);
+        String res2 = sw2.toString();
+        assertFalse(res2.contains("HEADER\n--------------------"));
+        assertFalse(res2.contains("FOOTER\n--------------------"));
+        assertTrue(res2.contains("DETAILS 1"));
     }
 
     @Test
@@ -77,5 +101,13 @@ public class TestRenders {
         assertTrue(result.contains("<h2>DETAILS 1</h2>"));
         assertTrue(result.contains("<h2>FOOTER</h2>"));
         assertTrue(result.contains("<table border=\"1\">"));
+
+        FileDescriptor detailOnly = createDetailOnlyFileDescriptor();
+        StringWriter sw2 = new StringWriter();
+        RenderUtils.renderAsHtml(detailOnly, sw2);
+        String res2 = sw2.toString();
+        assertFalse(res2.contains("<h2>HEADER</h2>"));
+        assertFalse(res2.contains("<h2>FOOTER</h2>"));
+        assertTrue(res2.contains("<h2>DETAILS 1</h2>"));
     }
 }

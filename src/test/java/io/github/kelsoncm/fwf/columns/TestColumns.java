@@ -2,7 +2,9 @@ package io.github.kelsoncm.fwf.columns;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -66,9 +68,15 @@ public class TestColumns {
         assertEquals("    ", cd.toStr(""));
         assertEquals("    ", cd.toStr(null));
 
+        assertThrows(IllegalArgumentException.class, () -> cd.toStr(123));
+        assertThrows(IllegalArgumentException.class, () -> cd.toStr("12345"));
+
         assertEquals("asdf", cd.toValue("asdf"));
         assertEquals("a", cd.toValue("   a"));
         assertEquals("", cd.toValue("    "));
+
+        RightCharColumn noDesc = new RightCharColumn("name", 4);
+        assertEquals("name", noDesc.getDescription());
     }
 
     @Test
@@ -93,6 +101,9 @@ public class TestColumns {
 
         assertThrows(IllegalArgumentException.class, () -> cd.toValue("abcd"));
         assertThrows(IllegalArgumentException.class, () -> cd.toValue("-001"));
+
+        PositiveIntegerColumn noDesc = new PositiveIntegerColumn("name", 4);
+        assertEquals("name", noDesc.getDescription());
     }
 
     @Test
@@ -107,6 +118,7 @@ public class TestColumns {
 
         PositiveDecimalColumn defaultDec = new PositiveDecimalColumn("name", 4);
         assertEquals(2, defaultDec.getDecimals());
+        assertEquals("name", defaultDec.getDescription());
 
         assertEquals("0000", cd.toStr(null));
         assertEquals("0000", cd.toStr(0.0));
@@ -143,6 +155,7 @@ public class TestColumns {
 
         DateTimeColumn colDefault = new DateTimeColumn("dt");
         assertEquals("%d%m%Y%H%M", colDefault.getFormat());
+        assertEquals("dt", colDefault.getDescription());
 
         DateTimeColumn cd = new DateTimeColumn("dt", "%d%m%Y%H%M%S", "desc", 6);
         assertEquals("00000000000000", cd.toStr(null));
@@ -156,5 +169,53 @@ public class TestColumns {
         assertNull(cd.toValue("00000000000000"));
 
         assertThrows(IllegalArgumentException.class, () -> cd.toValue("invalid_date_time"));
+    }
+
+    @Test
+    void testDateColumn() {
+        assertThrows(NullPointerException.class, () -> new DateColumn(null));
+        assertThrows(IllegalArgumentException.class, () -> new DateColumn(""));
+
+        DateColumn defaultCol = new DateColumn("d");
+        assertEquals("%d%m%Y", defaultCol.getFormat());
+        assertEquals(8, defaultCol.getSize());
+        assertEquals("d", defaultCol.getDescription());
+
+        DateColumn customCol = new DateColumn("d", "%d/%m/%Y", "Custom Date");
+        assertEquals("%d/%m/%Y", customCol.getFormat());
+        assertEquals(10, customCol.getSize());
+
+        LocalDate ld = LocalDate.of(2001, 12, 31);
+        assertEquals("31122001", defaultCol.toStr(ld));
+        assertEquals("00000000", defaultCol.toStr(null));
+        assertThrows(IllegalArgumentException.class, () -> defaultCol.toStr("not a date"));
+
+        assertEquals(ld, defaultCol.toValue("31122001"));
+        assertNull(defaultCol.toValue("00000000"));
+        assertThrows(IllegalArgumentException.class, () -> defaultCol.toValue("invalid_date"));
+    }
+
+    @Test
+    void testTimeColumn() {
+        assertThrows(NullPointerException.class, () -> new TimeColumn(null));
+        assertThrows(IllegalArgumentException.class, () -> new TimeColumn(""));
+
+        TimeColumn defaultCol = new TimeColumn("t");
+        assertEquals("%H%M", defaultCol.getFormat());
+        assertEquals(4, defaultCol.getSize());
+        assertEquals("t", defaultCol.getDescription());
+
+        TimeColumn customCol = new TimeColumn("t", "%H:%M", "Custom Time");
+        assertEquals("%H:%M", customCol.getFormat());
+        assertEquals(5, customCol.getSize());
+
+        LocalTime lt = LocalTime.of(23, 59, 0);
+        assertEquals("2359", defaultCol.toStr(lt));
+        assertEquals("0000", defaultCol.toStr(null));
+        assertThrows(IllegalArgumentException.class, () -> defaultCol.toStr("not a time"));
+
+        assertEquals(lt, defaultCol.toValue("2359"));
+        assertNull(defaultCol.toValue("0000"));
+        assertThrows(IllegalArgumentException.class, () -> defaultCol.toValue("invalid_time"));
     }
 }
