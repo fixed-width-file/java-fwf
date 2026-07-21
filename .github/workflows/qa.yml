@@ -112,15 +112,17 @@ jobs:
           server-password: MAVEN_CENTRAL_PASSWORD
 
       - name: Import GPG Key
-        if: ${{ secrets.GPG_PRIVATE_KEY != '' }}
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        if: ${{ env.GPG_PRIVATE_KEY != '' }}
         uses: crazy-max/ghaction-import-gpg@v6
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Publish Package to Sonatype Central
-        if: ${{ secrets.MAVEN_CENTRAL_USERNAME != '' }}
-        run: mvn clean deploy -P release -DskipTests
         env:
           MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+        if: ${{ env.MAVEN_CENTRAL_USERNAME != '' }}
+        run: mvn clean deploy -P release -DskipTests
