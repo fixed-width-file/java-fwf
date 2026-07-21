@@ -1,14 +1,11 @@
 package io.github.kelsoncm.fwf.compliance;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.kelsoncm.fwf.columns.*;
 import io.github.kelsoncm.fwf.descriptors.*;
 import io.github.kelsoncm.fwf.readers.Reader;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestCompliance {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
     private static Path complianceDir;
 
     @BeforeAll
@@ -42,7 +38,8 @@ public class TestCompliance {
     @Test
     void testAllComplianceCases() throws IOException {
         Path manifestPath = complianceDir.resolve("manifest.json");
-        Map<String, Object> manifest = MAPPER.readValue(manifestPath.toFile(), new TypeReference<>() {});
+        @SuppressWarnings("unchecked")
+        Map<String, Object> manifest = (Map<String, Object>) SimpleJsonParser.parse(Files.readString(manifestPath));
 
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> cases = (List<Map<String, Object>>) manifest.get("cases");
@@ -62,8 +59,10 @@ public class TestCompliance {
             assertTrue(Files.exists(inputPath), "Missing input.fwf for case: " + caseId);
             assertTrue(Files.exists(expectedPath), "Missing expected.json for case: " + caseId);
 
-            Map<String, Object> descData = MAPPER.readValue(descriptorPath.toFile(), new TypeReference<>() {});
-            List<Map<String, Object>> expectedData = MAPPER.readValue(expectedPath.toFile(), new TypeReference<>() {});
+            @SuppressWarnings("unchecked")
+            Map<String, Object> descData = (Map<String, Object>) SimpleJsonParser.parse(Files.readString(descriptorPath));
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> expectedData = (List<Map<String, Object>>) SimpleJsonParser.parse(Files.readString(expectedPath));
             String inputContent = Files.readString(inputPath);
 
             FileDescriptor fileDescriptor = buildFileDescriptor(descData);
@@ -171,5 +170,127 @@ public class TestCompliance {
             return ldt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         }
         return val;
+    }
+
+    static class SimpleJsonParser {
+        private final String json;
+        private int pos = 0;
+
+        SimpleJsonParser(String json) {
+            this.json = json;
+        }
+
+        static Object parse(String json) {
+            return new SimpleJsonParser(json).parseValue();
+        }
+
+        private Object parseValue() {
+            skipWhitespace();
+            if (pos >= json.length()) return null;
+            char c = json.charAt(pos);
+            if (c == '{') return parseObject();
+            if (c == '[') return parseArray();
+            if (c == '"') return parseString();
+            if (c == 't' || c == 'f') return parseBoolean();
+            if (c == 'n') { pos += 4; return null; }
+            if (Character.isDigit(c) || c == '-') return parseNumber();
+            throw new IllegalArgumentException("Unexpected char at " + pos + ": " + c);
+        }
+
+        private Map<String, Object> parseObject() {
+            Map<String, Object> map = new LinkedHashMap<>();
+            pos++;
+            skipWhitespace();
+            if (pos < json.length() && json.charAt(pos) == '}') { pos++; return map; }
+            while (pos < json.length()) {
+                skipWhitespace();
+                String key = parseString();
+                skipWhitespace();
+                if (json.charAt(pos) != ':') throw new IllegalArgumentException("Expected ':' at " + pos);
+                pos++;
+                Object value = parseValue();
+                map.put(key, value);
+                skipWhitespace();
+                if (pos < json.length() && json.charAt(pos) == '}') { pos++; break; }
+                if (pos < json.length() && json.charAt(pos) == ',') { pos++; continue; }
+            }
+            return map;
+        }
+
+        private List<Object> parseArray() {
+            List<Object> list = new ArrayList<>();
+            pos++;
+            skipWhitespace();
+            if (pos < json.length() && json.charAt(pos) == ']') { pos++; return list; }
+            while (pos < json.length()) {
+                Object value = parseValue();
+                list.add(value);
+                skipWhitespace();
+                if (pos < json.length() && json.charAt(pos) == ']') { pos++; break; }
+                if (pos < json.length() && json.charAt(pos) == ',') { pos++; continue; }
+            }
+            return list;
+        }
+
+        private String parseString() {
+            pos++;
+            StringBuilder sb = new StringBuilder();
+            while (pos < json.length()) {
+                char c = json.charAt(pos++);
+                if (c == '"') return sb.toString();
+                if (c == '\\') {
+                    if (pos >= json.length()) break;
+                    char next = json.charAt(pos++);
+                    switch (next) {
+                        case '"' -> sb.append('"');
+                        case '\\' -> sb.append('\\');
+                        case '/' -> sb.append('/');
+                        case 'b' -> sb.append('\b');
+                        case 'f' -> sb.append('\f');
+                        case 'n' -> sb.append('\n');
+                        case 'r' -> sb.append('\r');
+                        case 't' -> sb.append('\t');
+                        case 'u' -> {
+                            String hex = json.substring(pos, pos + 4);
+                            sb.append((char) Integer.parseInt(hex, 16));
+                            pos += 4;
+                        }
+                        default -> sb.append(next);
+                    }
+                } else {
+                    sb.append(c);
+                }
+            }
+            return sb.toString();
+        }
+
+        private Boolean parseBoolean() {
+            if (json.startsWith("true", pos)) { pos += 4; return Boolean.TRUE; }
+            if (json.startsWith("false", pos)) { pos += 5; return Boolean.FALSE; }
+            throw new IllegalArgumentException("Invalid boolean at " + pos);
+        }
+
+        private Number parseNumber() {
+            int start = pos;
+            if (json.charAt(pos) == '-') pos++;
+            while (pos < json.length() && (Character.isDigit(json.charAt(pos)) || json.charAt(pos) == '.' || json.charAt(pos) == 'e' || json.charAt(pos) == 'E' || json.charAt(pos) == '+' || json.charAt(pos) == '-')) {
+                pos++;
+            }
+            String numStr = json.substring(start, pos);
+            if (numStr.contains(".") || numStr.contains("e") || numStr.contains("E")) {
+                return Double.parseDouble(numStr);
+            }
+            long l = Long.parseLong(numStr);
+            if (l >= Integer.MIN_VALUE && l <= Integer.MAX_VALUE) {
+                return (int) l;
+            }
+            return l;
+        }
+
+        private void skipWhitespace() {
+            while (pos < json.length() && Character.isWhitespace(json.charAt(pos))) {
+                pos++;
+            }
+        }
     }
 }
